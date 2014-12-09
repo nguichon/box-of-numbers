@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node index",
-    "postinstall": "./node_modules/.bin/grunt build"
+    "postinstall": "grunt build"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   "dependencies": {
     "express": "^4.10.4",
     "grunt": "~0.4.5",
+    "grunt-cli": "0.1.13",
     "grunt-contrib-uglify": "~0.5.0"
   }
 }
