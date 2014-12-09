@@ -5,6 +5,9 @@ var MATCH_ATTEMPT_PAUSE_DURATION_MS = 800;
 var HIDE_CARD_FACE_VALUE_DELAY_MS = 300;
 var SCORE_PER_DIFFICULTY = 50;
 var DIFFICULTY_SQUARE_MODIFIER = 2;
+var FILL_TIME = 1000;
+var MAX_DIFFICULTY = 4
+var currentDifficulty = 2;
 
 function BoxOfNumbersGame(difficulty) {
 	var trueDifficulty = difficulty + DIFFICULTY_SQUARE_MODIFIER;
@@ -20,7 +23,14 @@ function BoxOfNumbersGame(difficulty) {
 	function Counter(title, startingValue) {
 		this.value = startingValue;
 		this.title = title;
-		$('#score-board').append('<li class="score-item"><strong>' + title + ': </strong><span id="score' + title + '">' + this.value + '</span></li>');
+
+		var counter = $('#score' + title);
+		if( counter.size() > 0) {
+			this.value = startingValue;
+			$('#score' + this.title).html(startingValue);
+		} else {
+			$('#score-board').append('<li class="score-item"><strong>' + title + ': </strong><span id="score' + title + '">' + this.value + '</span></li>');
+		}
 	}
 
 	Counter.prototype.set = function( newValue ) {
@@ -33,12 +43,14 @@ function BoxOfNumbersGame(difficulty) {
 		$('#score' + this.title).html(this.value);
 	};
 
-	function NumberedCard(identifier, matchingValue) {
+	function NumberedCard(matchingValue) {
 		var isFlipped = false;
 		var isMatched = false;
+		var identifier = 'default'
 		var _self = this;
 
-		this.attach = function() {
+		this.attach = function(id) {
+			identifier = id;
 			$('#game-board').append('<div class="container"><div class="card" id=' + identifier + '><figure class="front"></figure><figure class="back"></figure></div></div>');
 		
 			$('#' + identifier).click(flip);
@@ -112,7 +124,7 @@ function BoxOfNumbersGame(difficulty) {
 		};
 	};
 
-	this.start = function() {
+	this.start = function(callback) {
 		if( started ) return;
 		started = true;
 
@@ -124,16 +136,29 @@ function BoxOfNumbersGame(difficulty) {
 
 		shuffle(cards);
 
+		$('#game-board').empty();
 		$('#game-board').css('width', trueDifficulty * 120);
 
 		var cardIndex = 0;
 		var isOdd = numberOfCards % 2;
 		for(var i = 0; i < numberOfCards; i++) {
-			if(!isOdd || i !== Math.floor(numberOfCards / 2)) {
-				cards[cardIndex++].attach();
-			} else {
-				$("#game-board").append('<div class="container"><div class="card matched"><figure class="front"></figure><figure class="back">X</figure></div></div>');
-			}
+			function cb() {
+				var freeSpace = (i === Math.floor(numberOfCards / 2));
+				var identifier = i;
+				var last = (i === numberOfCards - 1);
+				
+				return function() {
+					if(isOdd && freeSpace) {
+						$("#game-board").append('<div class="container"><div class="card matched"><figure class="front"></figure><figure class="back">X</figure></div></div>');
+					} else {
+						cards[cardIndex++].attach(identifier);
+					}
+
+					if(last) { return callback(); }
+				};
+			};
+
+			setTimeout(cb(), (MATCH_ATTEMPT_PAUSE_DURATION_MS / numberOfCards) * i);
 		};
 	};
 
@@ -166,10 +191,42 @@ function shuffle(array) {
     return array;
 }
 
-function startGame() {
-	var game = new BoxOfNumbersGame(3);
+function initializeBoxOfNumbers() {
+	var game = new BoxOfNumbersGame(currentDifficulty);
+	var blocked = false;
 
-	game.start();
+	var callback = function() {
+		blocked = false;
+	}
+
+	game.start(callback);
+
+	$('#reset-game').click(function() {
+		if( blocked ) return;
+		game = new BoxOfNumbersGame(currentDifficulty);
+		blocked = true;
+		game.start(callback);
+	});
+
+	$('#higher-game').click(function() {
+		if( blocked ) return;
+
+		if( ++currentDifficulty > MAX_DIFFICULTY ) currentDifficulty = MAX_DIFFICULTY;
+
+		game = new BoxOfNumbersGame(currentDifficulty);
+		blocked = true;
+		game.start(callback);
+	});
+
+	$('#lower-game').click(function() {
+		if( blocked ) return;
+
+		if( --currentDifficulty < 0 ) currentDifficulty = 0;
+
+		game = new BoxOfNumbersGame(currentDifficulty);
+		blocked = true;
+		game.start(callback);
+	});
 };
 
-$(document).ready(startGame);
+$(document).ready(initializeBoxOfNumbers);
