@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node index",
-    "postinstall": "grunt build"
+    "postinstall": "bower install && grunt build"
   },
   "repository": {
     "type": "git",
