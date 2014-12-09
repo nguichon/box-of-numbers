@@ -7,12 +7,12 @@
     "node": "0.10.33"
   },
   "scripts": {
-    "start": "node index"
+    "start": "node index",
+    "postinstall": "grunt build"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nguichon/box-of-numbers.git",
-    "postinstall": "grunt build"
+    "url": "https://github.com/nguichon/box-of-numbers.git"
   },
   "author": "nguichon",
   "license": "ISC",
