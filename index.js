@@ -1,0 +1,7 @@
+var express = require('express');
+var app = express();
+
+app.use(express.static(__dirname + '/public'));
+//app.use('/old', express.static(__dirname + '/old'));
+
+app.listen(process.env.PORT || 3000);
