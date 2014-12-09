@@ -131,7 +131,7 @@ function BoxOfNumbersGame(difficulty) {
 		var numberOfCards = Math.pow(trueDifficulty, 2);
 		var cards = [];
 		for(var i = 0; i < numberOfCards - numberOfCards % 2; i++) {
-			cards.push(new NumberedCard(i, Math.floor(i / 2.0)));
+			cards.push(new NumberedCard(Math.floor(i / 2.0)));
 		}
 
 		shuffle(cards);
