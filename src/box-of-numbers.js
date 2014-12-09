@@ -167,7 +167,7 @@ function shuffle(array) {
 }
 
 function startGame() {
-	var game = new BoxOfNumbersGame(2);
+	var game = new BoxOfNumbersGame(3);
 
 	game.start();
 };
