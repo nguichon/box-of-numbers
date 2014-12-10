@@ -1,30 +1,45 @@
+/*
+ * A simple blind tile matching game that uses CSS for animations. This the enginge that drives it.
+ * Author: Nicholas Guichon, 2014
+ */
+
+// A Whole Bunch of Constants (tm) because I'm a lazy fucker.
+// Score Constant
 var CLICK_SCORE = -1;
 var GOOD_MATCH_SCORE = 2;
 var BAD_MATCH_SCORE = -2;
+var SCORE_FORMULA = function(difficulty) { return Math.pow((difficulty + 3),2); }; // Why the fuck not.
+
+// Game Fluidity Constants
 var MATCH_ATTEMPT_PAUSE_DURATION_MS = 800;
 var HIDE_CARD_FACE_VALUE_DELAY_MS = 300;
-var SCORE_FORMULA = function(difficulty) {
-	return Math.pow((difficulty + 3),2);
-};
+
+// Game Difficulty Constants
 var DIFFICULTY_SQUARE_MODIFIER = 2;
-var FILL_TIME = 1000;
-var MAX_DIFFICULTY = 4
-var currentDifficulty = 2;
+var MAX_DIFFICULTY = 4;
+
+// Rendering Constants
 var VIEW_PORT_VALUE = 80;
-var CARD_PORTION = 0.95
+var CARD_PORTION = 0.95;
 
 // This is the game itself. 
 function BoxOfNumbersGame(difficulty) {
+	// An important (tm) number.
 	var trueDifficulty = difficulty + DIFFICULTY_SQUARE_MODIFIER;
+
+	// Score board UI elements.
 	var playerScore = new Counter('Score', SCORE_FORMULA(difficulty), true);
 	var matchAttempts = new Counter('Attempts', 0);
 	var cardsFlipped = new Counter('Flips', 0);
 	var gameDifficulty = new Counter('Difficulty', difficulty);
-	var currentlyFlippedCard = null;
-	var paused = false;
-	var started = false;
-	var _game = this;
 
+	// Game data.
+	var currentlyFlippedCard = null;
+	var paused = false; // Flag to prevent flipping over a gajillion cards.
+	var started = false; // Flag to prevent starting a bunch of times.
+	var _game = this; // Self reference for future reference
+
+	// An object for usage by the GameObject, imbeded because once again -> Lazy Fucker
 	function Counter(title, startingValue, flashes) {
 		this.value = startingValue;
 		this.title = title;
@@ -34,17 +49,18 @@ function BoxOfNumbersGame(difficulty) {
 
 		var $counter = $('#score' + title);
 		if( $counter.size() > 0) {
+			// Don't create another one if it exists.
 			this.value = startingValue;
 			$('#score' + this.title).html(startingValue);
 			this.$item = $('#score' + this.title).parent();
 		} else {
+			// DO create a new one.
 			this.$item = $('<li class="score-item"><strong>' + title + ': </strong><span id="score' + title + '">' + this.value + '</span></li>');
 			$('#score-board').append(this.$item);
 			if( this.flashes ) {
-				console.log('y');
 				this.$item.on('transitionend MSTransitionEnd webkitTransitionEnd oTransitionEnd', 
 					function() {
-				console.log('z');
+						// Remove the flash class once it completes so that we can re-add it later.
 						$(this).removeClass('flashBad');
 						$(this).removeClass('flashGood');
 					});
@@ -63,7 +79,6 @@ function BoxOfNumbersGame(difficulty) {
 		$('#score' + this.title).html(this.value);
 
 		if(this.flashes) {
-			console.log('x');
 			this.$item.addClass(incrementValue >= 0 ? 'flashGood' : 'flashBad');
 		}
 	};
@@ -125,6 +140,8 @@ function BoxOfNumbersGame(difficulty) {
 					// Tell the cards that their matches have been found!
 					_self.matchFound();
 					currentlyFlippedCard.matchFound();
+
+					// TODO: Check if any matchs are left, if not: A WINNER IS YOU
 				} else {
 					// Decrement player's score if they failed to get a match.
 					playerScore.modify(BAD_MATCH_SCORE);
@@ -241,6 +258,7 @@ function shuffle(array) {
 
 function initializeBoxOfNumbers() {
 	var game = new BoxOfNumbersGame(currentDifficulty);
+	var currentDifficulty = 2;
 	var blocked = false;
 
 	var callback = function() {
