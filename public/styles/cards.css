@@ -63,10 +63,10 @@
   border-style: solid;
 }
 .card.hover:not(.matched) > .front {
-  -webkit-animation: flash 1s infinite; /* Safari 4+ */
-  -moz-animation:    flash 1s infinite; /* Fx 5+ */
-  -o-animation:      flash 1s infinite; /* Opera 12+ */
-  animation:         flash 1s infinite;
+  -webkit-animation: flash 1s; /* Safari 4+ */
+  -moz-animation:    flash 1s; /* Fx 5+ */
+  -o-animation:      flash 1s; /* Opera 12+ */
+  animation:         flash 1s;
 }
 
 .card.flipped {
@@ -95,14 +95,14 @@
 }
 
 @-webkit-keyframes flash {
-  50% { background: #AA8888;  }
+  100% { background: #AA8888;  }
 }
 @-moz-keyframes flash {
-  50% { background: #AA8888;  }
+  100% { background: #AA8888;  }
 }
 @-o-keyframes flash {
-  50% { background: #AA8888;  }
+  100% { background: #AA8888;  }
 }
 @keyframes flash {
-  50% { background: #AA8888;  }
+  100% { background: #AA8888;  }
 }
