@@ -3,7 +3,9 @@ var GOOD_MATCH_SCORE = 2;
 var BAD_MATCH_SCORE = -1;
 var MATCH_ATTEMPT_PAUSE_DURATION_MS = 800;
 var HIDE_CARD_FACE_VALUE_DELAY_MS = 300;
-var SCORE_PER_DIFFICULTY = 50;
+var SCORE_FORMULA = function(difficulty) {
+	return Math.pow((difficulty + 2),2);
+};
 var DIFFICULTY_SQUARE_MODIFIER = 2;
 var FILL_TIME = 1000;
 var MAX_DIFFICULTY = 4
@@ -14,7 +16,7 @@ var CARD_PORTION = 0.95
 // This is the game itself. 
 function BoxOfNumbersGame(difficulty) {
 	var trueDifficulty = difficulty + DIFFICULTY_SQUARE_MODIFIER;
-	var playerScore = new Counter('Score', SCORE_PER_DIFFICULTY * trueDifficulty);
+	var playerScore = new Counter('Score', SCORE_FORMULA(difficulty));
 	var matchAttempts = new Counter('Attempts', 0);
 	var cardsFlipped = new Counter('Flips', 0);
 	var gameDifficulty = new Counter('Difficulty', difficulty);
@@ -26,6 +28,7 @@ function BoxOfNumbersGame(difficulty) {
 	function Counter(title, startingValue) {
 		this.value = startingValue;
 		this.title = title;
+
 
 		var counter = $('#score' + title);
 		if( counter.size() > 0) {
@@ -43,6 +46,7 @@ function BoxOfNumbersGame(difficulty) {
 
 	Counter.prototype.modify = function( incrementValue ) {
 		this.value += incrementValue;
+		if(this.value < 0) this.value = 0;
 		$('#score' + this.title).html(this.value);
 	};
 
@@ -83,9 +87,11 @@ function BoxOfNumbersGame(difficulty) {
 			
 			// Increment counters;
 			cardsFlipped.modify(1);
-			playerScore.modify(CLICK_SCORE);
 
-			if( !currentlyFlippedCard || currentlyFlippedCard === _self ) { return currentlyFlippedCard = _self; }
+			if( !currentlyFlippedCard || currentlyFlippedCard === _self ) { 
+				playerScore.modify(CLICK_SCORE);
+				return currentlyFlippedCard = _self; 
+			}
 
 			paused = true;
 			setTimeout(function() {

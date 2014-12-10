@@ -17,10 +17,10 @@ body {
   margin-left: 1vmin;
   margin-right: 1vmin;
   padding: 1vmin;
-  border-color: white;
+  border-color: black;
   border-width: 1px;
   border-style: solid;
-  background: #000000;
+  background: #664444;
   font-size: 3vmin;
   border-radius: 2px;
 }

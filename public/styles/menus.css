@@ -1,8 +1,9 @@
 #difficulty-guage {
+  left: 50%;
+  transform: translate(-50%, 0%);
+  text-align: center;
   position: absolute;
-  bottom: 0px;
-  right: 0px;
-  padding: 10px;
+  bottom: 1vmin;
 }
 
 .reset-button {
@@ -25,16 +26,15 @@
   font-weight:bold;
   padding:9px 15px;
   text-decoration:none;
-  border: none;
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
 }
 .reset-button:hover {
-  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #664444), color-stop(1, #664444));
-  background:-moz-linear-gradient(top, #664444 5%, #664444 100%);
-  background:-webkit-linear-gradient(top, #664444 5%, #664444 100%);
-  background:-o-linear-gradient(top, #664444 5%, #664444 100%);
-  background:-ms-linear-gradient(top, #664444 5%, #664444 100%);
-  background:linear-gradient(to bottom, #664444 5%, #664444 100%);
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#664444', endColorstr='#664444',GradientType=0);
+  -webkit-animation: flash 1s infinite; /* Safari 4+ */
+  -moz-animation:    flash 1s infinite; /* Fx 5+ */
+  -o-animation:      flash 1s infinite; /* Opera 12+ */
+  animation:         flash 1s infinite;
   background-color:#664444;
 }
 .reset-button:active {
