@@ -1,10 +1,10 @@
 var CLICK_SCORE = -1;
 var GOOD_MATCH_SCORE = 2;
-var BAD_MATCH_SCORE = -1;
+var BAD_MATCH_SCORE = -2;
 var MATCH_ATTEMPT_PAUSE_DURATION_MS = 800;
 var HIDE_CARD_FACE_VALUE_DELAY_MS = 300;
 var SCORE_FORMULA = function(difficulty) {
-	return Math.pow((difficulty + 2),2);
+	return Math.pow((difficulty + 3),2);
 };
 var DIFFICULTY_SQUARE_MODIFIER = 2;
 var FILL_TIME = 1000;
@@ -16,7 +16,7 @@ var CARD_PORTION = 0.95
 // This is the game itself. 
 function BoxOfNumbersGame(difficulty) {
 	var trueDifficulty = difficulty + DIFFICULTY_SQUARE_MODIFIER;
-	var playerScore = new Counter('Score', SCORE_FORMULA(difficulty));
+	var playerScore = new Counter('Score', SCORE_FORMULA(difficulty), true);
 	var matchAttempts = new Counter('Attempts', 0);
 	var cardsFlipped = new Counter('Flips', 0);
 	var gameDifficulty = new Counter('Difficulty', difficulty);
@@ -25,17 +25,30 @@ function BoxOfNumbersGame(difficulty) {
 	var started = false;
 	var _game = this;
 
-	function Counter(title, startingValue) {
+	function Counter(title, startingValue, flashes) {
 		this.value = startingValue;
 		this.title = title;
+		this.flashes = flashes;
+		this.$item = null;
 
 
-		var counter = $('#score' + title);
-		if( counter.size() > 0) {
+		var $counter = $('#score' + title);
+		if( $counter.size() > 0) {
 			this.value = startingValue;
 			$('#score' + this.title).html(startingValue);
+			this.$item = $('#score' + this.title).parent();
 		} else {
-			$('#score-board').append('<li class="score-item"><strong>' + title + ': </strong><span id="score' + title + '">' + this.value + '</span></li>');
+			this.$item = $('<li class="score-item"><strong>' + title + ': </strong><span id="score' + title + '">' + this.value + '</span></li>');
+			$('#score-board').append(this.$item);
+			if( this.flashes ) {
+				console.log('y');
+				this.$item.on('transitionend MSTransitionEnd webkitTransitionEnd oTransitionEnd', 
+					function() {
+				console.log('z');
+						$(this).removeClass('flashBad');
+						$(this).removeClass('flashGood');
+					});
+			}
 		}
 	}
 
@@ -48,6 +61,11 @@ function BoxOfNumbersGame(difficulty) {
 		this.value += incrementValue;
 		if(this.value < 0) this.value = 0;
 		$('#score' + this.title).html(this.value);
+
+		if(this.flashes) {
+			console.log('x');
+			this.$item.addClass(incrementValue >= 0 ? 'flashGood' : 'flashBad');
+		}
 	};
 
 	function NumberedCard(matchingValue) {
@@ -191,6 +209,13 @@ function BoxOfNumbersGame(difficulty) {
 		this.trueDifficulty = difficulty + DIFFICULTY_SQUARE_MODIFIER;
 		playerScore.set(trueDifficulty * SCORE_PER_DIFFICULTY);
 		gameDifficulty.set(difficulty);
+	};
+
+	this.delete = function() {
+		playerScore.$item.remove();
+		matchAttempts.$item.remove();
+		cardsFlipped.$item.remove();
+		gameDifficulty.$item.remove();
 	};
 };
 
