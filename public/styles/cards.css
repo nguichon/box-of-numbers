@@ -1,0 +1,108 @@
+.card {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  /*transition: transform 0.5s;*/
+  transition-duration: 0.5s;
+  box-sizing: border-box;
+}
+
+.card figure {
+  width: 100%;
+  line-height: 100%;
+  height: 100%;
+  /*font-size: 50px;*/
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  backface-visibility: hidden;
+  margin: 0px;
+  position:absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.card figure p {
+  position: absolute;    
+  top: 50%;    
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 6vmin;
+  margin: 0px;
+}
+
+.cardbox {
+  float: left;
+  margin: 0px;
+  padding: 0px;
+  -webkit-animation: fadeIn 1s; /* Safari 4+ */
+  -moz-animation:    fadeIn 1s; /* Fx 5+ */
+  -o-animation:      fadeIn 1s; /* Opera 12+ */
+  animation:         fadeIn 1s;
+}
+
+.card .front {
+  height: 100%;
+  width: 100%;
+  background: #664444;
+  border-radius: 5px;
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
+  /*background-image: url('http://i0.kym-cdn.com/entries/icons/square/000/005/608/nyancat.gif');*/
+}
+.card .back {
+  height: 100%;
+  width: 100%;
+  background: #000000;
+  text-align: center;
+  transform: rotateY( 180deg );
+  border-radius: 5px;
+  border-color: white;
+  border-width: 1px;
+  border-style: solid;
+}
+.card.hover > .front {
+  -webkit-animation: flash 1s infinite; /* Safari 4+ */
+  -moz-animation:    flash 1s infinite; /* Fx 5+ */
+  -o-animation:      flash 1s infinite; /* Opera 12+ */
+  animation:         flash 1s infinite;
+}
+
+.card.flipped {
+  transform: rotateY( 180deg );
+}
+
+.matched {
+  opacity: 0.1;
+}
+
+@-webkit-keyframes fadeIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+@-moz-keyframes fadeIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+@-o-keyframes fadeIn{
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes fadeIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@-webkit-keyframes flash {
+  50% { background: #AA8888;  }
+}
+@-moz-keyframes flash {
+  50% { background: #AA8888;  }
+}
+@-o-keyframes flash {
+  50% { background: #AA8888;  }
+}
+@keyframes flash {
+  50% { background: #AA8888;  }
+}

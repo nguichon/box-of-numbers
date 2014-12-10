@@ -8,7 +8,10 @@ var DIFFICULTY_SQUARE_MODIFIER = 2;
 var FILL_TIME = 1000;
 var MAX_DIFFICULTY = 4
 var currentDifficulty = 2;
+var VIEW_PORT_VALUE = 80;
+var CARD_PORTION = 0.95
 
+// This is the game itself. 
 function BoxOfNumbersGame(difficulty) {
 	var trueDifficulty = difficulty + DIFFICULTY_SQUARE_MODIFIER;
 	var playerScore = new Counter('Score', SCORE_PER_DIFFICULTY * trueDifficulty);
@@ -44,16 +47,28 @@ function BoxOfNumbersGame(difficulty) {
 	};
 
 	function NumberedCard(matchingValue) {
+		var $card;
 		var isFlipped = false;
 		var isMatched = false;
 		var identifier = 'default'
 		var _self = this;
 
-		this.attach = function(id) {
+		this.attach = function(id, size, margin) {
 			identifier = id;
-			$('#game-board').append('<div class="container"><div class="card" id=' + identifier + '><figure class="front"></figure><figure class="back"></figure></div></div>');
+
+			var $cardBox = $('<div class="cardbox" />');
+			$card = $('<div class="card" id=' + identifier + '><figure class="front"/><figure class="back"/></div>');
+
+			$cardBox.css('width', size + 'vmin');
+			$cardBox.css('height', size + 'vmin');
+			$cardBox.css('margin', margin + 'vmin');
+			
+			$cardBox.append($card);
+
+			$('#game-board').append($cardBox);
 		
-			$('#' + identifier).click(flip);
+			$card.click(flip);
+			$card.on('mouseover mouseout', function() { $card.toggleClass('hover'); });
 		};
 
 		function flip() {
@@ -63,8 +78,8 @@ function BoxOfNumbersGame(difficulty) {
 
 			// Flip variables of various place and thangs
 			isFlipped = true;
-			$('#' + identifier).addClass('flipped');
-			$('#' + identifier + '>.back').html(matchingValue);
+			$card.addClass('flipped');
+			$card.children('.back').html('<p>' + matchingValue + '</p>');
 			
 			// Increment counters;
 			cardsFlipped.modify(1);
@@ -104,18 +119,18 @@ function BoxOfNumbersGame(difficulty) {
 			}
 
 			isFlipped = false;
-			$('#' + identifier).removeClass('flipped');
+			$card.removeClass('flipped');
 
 			setTimeout(function() {
 				if(!isFlipped) {
-					$('#'+identifier+'>.back').html('');
+					$card.children('.back').html('');
 				}
 			}, HIDE_CARD_FACE_VALUE_DELAY_MS);
 		};
 
 		this.matchFound = function() {
 			isMatched = true;
-			$('#' + identifier).addClass('matched');
+			$card.addClass('matched');
 			_self.unflip();
 		};
 
@@ -137,29 +152,31 @@ function BoxOfNumbersGame(difficulty) {
 		shuffle(cards);
 
 		$('#game-board').empty();
-		$('#game-board').css('width', trueDifficulty * 120);
 
 		var cardIndex = 0;
 		var isOdd = numberOfCards % 2;
+		var $gameBoard = $("#game-board");
+		var size = (VIEW_PORT_VALUE / trueDifficulty) * CARD_PORTION;
+		var margin = (VIEW_PORT_VALUE / trueDifficulty) * (1-CARD_PORTION) / 2;
 		for(var i = 0; i < numberOfCards; i++) {
-			function cb() {
-				var freeSpace = (i === Math.floor(numberOfCards / 2));
-				var identifier = i;
-				var last = (i === numberOfCards - 1);
-				
-				return function() {
-					if(isOdd && freeSpace) {
-						$("#game-board").append('<div class="container"><div class="card matched"><figure class="front"></figure><figure class="back">X</figure></div></div>');
-					} else {
-						cards[cardIndex++].attach(identifier);
-					}
+			var freeSpace = (i === Math.floor(numberOfCards / 2));
+			var identifier = i;
 
-					if(last) { return callback(); }
-				};
-			};
+			if(isOdd && freeSpace) {
+				var $freebie = $('<div class="cardbox"><div class="card matched"><figure class="front"/><figure class="back"><p>X</p></figure></div></div>')
 
-			setTimeout(cb(), (MATCH_ATTEMPT_PAUSE_DURATION_MS / numberOfCards) * i);
+
+				$freebie.css('width', size + 'vmin');
+				$freebie.css('height', size + 'vmin');
+				$freebie.css('margin', margin + 'vmin');
+
+				$gameBoard.append($freebie);
+			} else {
+				cards[cardIndex++].attach(identifier, size, margin);
+			}
 		};
+
+		return callback(); 
 	};
 
 	this.changeDifficulty = function(newDifficulty) {
