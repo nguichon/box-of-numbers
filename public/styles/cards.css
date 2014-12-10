@@ -62,7 +62,7 @@
   border-width: 1px;
   border-style: solid;
 }
-.card.hover > .front {
+.card.hover:not(.matched) > .front {
   -webkit-animation: flash 1s infinite; /* Safari 4+ */
   -moz-animation:    flash 1s infinite; /* Fx 5+ */
   -o-animation:      flash 1s infinite; /* Opera 12+ */
