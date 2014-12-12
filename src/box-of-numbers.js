@@ -106,8 +106,8 @@
 				$('#game-board').append($cardBox);
 
 				$card.click(flip);
-				$card.on('mouseover', function() { $card.addClass('hover'); });
-				$card.on('touchstop mouseout', function() { $card.removeClass('hover'); });
+				$card.on('mouseover vmouseover', function() { $card.addClass('hover'); });
+				$card.on('mouseout vmouseout', function() { $card.removeClass('hover'); });
 			};
 
 			function flip() {
