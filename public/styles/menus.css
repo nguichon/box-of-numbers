@@ -1,9 +1,23 @@
 #difficulty-guage {
-  left: 50%;
-  transform: translate(-50%, 0%);
   text-align: center;
+  margin: 0 auto;
+}
+
+.facebook-box {
+  display: block; 
+  margin: 0 auto;
+  padding: 5px;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
   position: absolute;
-  bottom: 1vmin;
+  bottom: 0px;
+  background-color: #aaa;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, 0);
+}
+
+.fb-like {
 }
 
 .reset-button {

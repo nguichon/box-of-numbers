@@ -29,6 +29,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-express-server');
 
   // Default task(s).
-  grunt.registerTask('default', ['uglify', 'express']);
-  grunt.registerTask('build', ['uglify']);
+  grunt.registerTask('default', ['express']);
+  grunt.registerTask('build', []);
 };
