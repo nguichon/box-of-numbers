@@ -1,11 +1,8 @@
 var express = require('express');
+var morgan = require('morgan')
 var app = express();
 
-if(process.env.NODE_ENV === undefined) {
-	app.use('/box-of-numbers.min.js', function(req, res) {
-		res.sendFile(__dirname + '/src/box-of-numbers.js');
-	});
-}
+//app.use(morgan('combined'))
 
 app.use(express.static(__dirname + '/public'));
 

@@ -1,0 +1,65 @@
+body {
+	background: #333;
+}
+
+.card-front {
+	background: #000;
+	border-color: white;
+}
+
+.card-back {
+	background-color: #644;
+}
+
+.cube.matched > .card.card-back {
+	background-color: #666;
+}
+
+.cube.hover:not(.matched) > .card.card-back {
+  background-color: #988;
+}
+
+.card p {
+	color: #FFF;
+}
+
+.score-item {
+	background-color: #644;
+}
+
+#facebook-likes {
+	background-color: #AAA;
+}
+
+.score-item.flashGood {
+  background-color:#558844;
+}
+
+.score-item.flashBad {
+  background-color:#993333;
+}
+
+.modal {
+	background-color: #644;
+}
+
+.optionButton:hover {
+   border-top-color: #422;
+   background: #291212;
+   color: #ccc;
+}
+.optionButton:active {
+   border-top-color: #422;
+   background: #120606;
+}
+
+.optionButton {
+   color: white;
+   background: #644;
+   border-top-color: #977;
+   background: -webkit-gradient(linear, left top, left bottom, from(#644), to(#291212));
+   background: -webkit-linear-gradient(top, #644 , #291212);
+   background: -moz-linear-gradient(top, #644, #291212);
+   background: -ms-linear-gradient(top, #644, #291212);
+   background: -o-linear-gradient(top, #644, #291212);
+}
